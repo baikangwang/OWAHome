@@ -19,7 +19,7 @@ namespace OWASample
         private  string _hostName = "https://webmail.taylorcorp.com";//"https://mail.mycompany.com";
         private string _url = "https://legacymail.taylorcorp.com/exchange";//"https://webmail.taylorcorp.com/owa";
         private string _postUrl = "https://legacymail.taylorcorp.com/exchweb/bin/auth/owaauth.dll";//"https://webmail.taylorcorp.com/owa/auth.owa";
-        private  string path = "/public/Calendars/Board%20Room";
+        private string path = "/bkwang@nltechdev.com/Calendar/";//"/public/Calendars/Board%20Room";
         private  string _username = "corp\\bkwang";//"user";
         private  string _password = "R8ll#qqO2";//"password";
         private CookieContainer _cookieContainerPost = null;
@@ -219,7 +219,7 @@ namespace OWASample
 
         public void RunQuery()
         {
-            string uri = _hostName + path;
+            string uri = _url + path;
             HttpWebRequest request;
             WebResponse response;
             byte[] bytes;
@@ -229,7 +229,17 @@ namespace OWASample
 
             // Note that deep traversals don't work on public folders. In other words, if you
             // need to dig deeper you'll need to split your query into multiple requests.
-
+//            <a:searchrequest xmlns:a="DAV:" > 
+//<a:sql>Select "urn:schemas:calendar:dtstart" AS dtstart, 
+//"urn:schemas:calendar:dtend" AS dtend, 
+//"urn:schemas:calendar:alldayevent" AS alldayevent 
+//FROM Scope('SHALLOW TRAVERSAL OF ""') 
+//WHERE NOT "urn:schemas:calendar:instancetype" = 1 AND "urn:schemas:calendar:dtend" &gt; '2013/08/24 16:00:00' 
+//AND "urn:schemas:calendar:dtstart" &lt; '2013/10/05 16:00:00' 
+//AND NOT "urn:schemas:calendar:instancetype" = 1 
+//AND NOT "urn:schemas:calendar:busystatus" = 'FREE' 
+//ORDER BY "urn:schemas:calendar:dtstart" ASC 
+//</></>
             string format =
                 @"
                     SELECT
@@ -271,7 +281,7 @@ namespace OWASample
                 // Parse the XML response to find the data we need.
 
                 XmlDocument document = new XmlDocument();
-                document.Load(responseStream);
+                if (responseStream != null) document.Load(responseStream);
 
                 XmlNodeList subjectNodes = document.GetElementsByTagName("e:subject");
                 XmlNodeList locationNodes = document.GetElementsByTagName("a:parentname");
