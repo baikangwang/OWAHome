@@ -19,7 +19,7 @@ namespace OWACalendar
             {
                 WebDAVRequest request = new WebDAVRequest();
                 request.Authenticate();
-                //request.RunQuery();
+                request.RunQuery();
             }
             catch (SecurityException e)
             {

@@ -6,18 +6,6 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWACalendar", "OWACalendar\OWACalendar.csproj", "{3A848857-1E70-4047-BCFF-6D659DAD6794}"
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = OWACalendar\\OWACalendar.csproj
-		SccProjectName1 = OWACalendar
-		SccLocalPath1 = OWACalendar
-		SccProjectUniqueName2 = OWASample\\OWASample.csproj
-		SccProjectName2 = OWASample
-		SccLocalPath2 = OWASample
-	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms

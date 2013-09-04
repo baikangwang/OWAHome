@@ -1,0 +1,464 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ArrayOfApplicationTemplate xmlns:i="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://schemas.solarwinds.com/2007/08/APM">
+    <ApplicationTemplate>
+        <Settings xmlns:d3p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+        <ComponentTemplates>
+            <ComponentTemplate>
+                <Id>2108</Id>
+                <Name>Exchange 2010 OWA Form Login Monitor</Name>
+                <Settings xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>__CredentialSetId</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>0</Value>
+                            <ValueType>String</ValueType>
+                            <Key>__CredentialSetId</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>__Disabled</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>False</Value>
+                            <ValueType>Boolean</ValueType>
+                            <Key>__Disabled</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>__UserDescription</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>Performs a user login procedure and returns the length of time it takes to log in.</Value>
+                            <ValueType>String</ValueType>
+                            <Key>__UserDescription</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>__UserNotes</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value></Value>
+                            <ValueType>String</ValueType>
+                            <Key>__UserNotes</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>CountAsDifference</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>False</Value>
+                            <ValueType>Boolean</ValueType>
+                            <Key>CountAsDifference</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>ExecutionMode</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>LocalHost</Value>
+                            <ValueType>Option</ValueType>
+                            <Key>ExecutionMode</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>ImpersonateForLocalMode</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>False</Value>
+                            <ValueType>Boolean</ValueType>
+                            <Key>ImpersonateForLocalMode</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>ScriptArguments</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value></Value>
+                            <ValueType>String</ValueType>
+                            <Key>ScriptArguments</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>ScriptBody</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>true</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>Function SecureStringToString($value) 
+{ 
+    [System.IntPtr] $bstr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($value); 
+    try 
+    { 
+        [System.Runtime.InteropServices.Marshal]::PtrToStringBSTR($bstr);
+    } 
+    finally 
+    { 
+        [System.Runtime.InteropServices.Marshal]::FreeBSTR($bstr); 
+    } 
+} 
+
+[string] $hostname = "${IP}"
+$c = Get-Credential -credential ${CREDENTIAL}
+[string] $username = $c.Username
+[string] $password = SecureStringToString $c.Password
+[string] $url = "https://$hostname/owa/"
+[string] $postUrl = $url + "auth.owa"
+[int] $requestTimeout = 15000
+[string] $successLoginText = "New Message"
+
+[System.TimeSpan] $responseTime = New-Object System.TimeSpan
+[System.Diagnostics.Stopwatch] $watch =  New-Object System.Diagnostics.Stopwatch
+$watch.Start()
+
+[System.Net.CookieContainer] $cookieContainerGet = new-object System.Net.CookieContainer
+
+#This command set the static property in .NET that causes the error in HTTPS probes.
+#[System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
+
+[System.Net.HttpWebRequest] $req = [System.Net.WebRequest]::Create($url)
+$req.method = "GET"
+$req.ContentType = "application/x-www-form-urlencoded"
+$req.TimeOut = $requestTimeout
+$req.UserAgent = "Mozilla/4.0 (compatible;);"
+$req.CookieContainer = $cookieContainerGet
+$req.ServicePoint.Expect100Continue = $FALSE;
+$req.CachePolicy = new-object System.Net.Cache.HttpRequestCachePolicy([System.Net.Cache.HttpRequestCacheLevel]::NoCacheNoStore);
+$req.KeepAlive = $FALSE;
+$req.AllowAutoRedirect = $TRUE;
+
+#echo "Connecting to $url"
+
+try
+{
+    [System.Net.HttpWebResponse] $res = $req.GetResponse()
+}
+catch [System.Exception]
+{
+    [string] $message = [System.String]::Format("Message: Connection failed to url ({0}). {1}", $url, $_.Exception.Message)
+    echo "Statistic: 1"
+    echo $message
+    exit 1;
+}
+
+if ($res.StatusCode -ne [System.Net.HttpStatusCode]::OK)
+{
+    [string] $message = [System.String]::Format("Message: Connection failed to url ({0}). Response status code: '{1}'.", $url, $res.StatusCode)
+    echo "Statistic: 1"
+    echo $message
+    exit 1;
+}
+
+$stream = $res.GetResponseStream()
+$sr = new-object System.IO.StreamReader($stream)
+$result = $sr.ReadToEnd()
+$stream.Close()
+$sr.Close()
+$res.Close()
+
+#echo "Got response from $url"
+
+[System.Net.HttpWebRequest] $post = [System.Net.WebRequest]::Create($postUrl)
+$post.method = "POST"
+$post.ContentType = "application/x-www-form-urlencoded"
+$post.TimeOut = $requestTimeout
+$post.UserAgent = "Mozilla/4.0 (compatible;);"
+$post.ServicePoint.Expect100Continue = $FALSE;
+$post.CachePolicy = new-object System.Net.Cache.HttpRequestCachePolicy([System.Net.Cache.HttpRequestCacheLevel]::NoCacheNoStore);
+$post.KeepAlive = $FALSE;
+$post.AllowAutoRedirect = $TRUE;
+
+[System.Uri] $uri = new-object System.Uri($url)
+
+[System.Net.CookieContainer] $cookieContainerPost = new-object System.Net.CookieContainer
+[System.Net.Cookie] $outlookJavascriptCookie = $null
+
+if ($cookieContainerGet.Count -gt 0)
+{
+	[System.Net.Cookie] $outlookSessionCookie = $cookieContainerGet.GetCookies($uri)[0]
+	$outlookJavascriptCookie = new-object System.Net.Cookie("PBack", "0", $outlookSessionCookie.Path, $outlookSessionCookie.Domain)
+} else
+{
+	$outlookJavascriptCookie = new-object System.Net.Cookie("PBack", "0", "/", $hostname)
+}
+$cookieContainerPost.Add($outlookJavascriptCookie)
+
+$post.CookieContainer = $cookieContainerPost
+
+[string] $postContent = [System.String]::Format("destination={0}&amp;flags=0&amp;forcedownlevel=0&amp;trusted=0&amp;username={1}&amp;password={2}&amp;isUtf8=1", $url, $username, $password)
+[System.Text.uTF8Encoding] $encoding = new-object System.Text.uTF8Encoding
+$postContentBytes = $encoding.getBytes($postContent)
+$post.ContentLength = $postContentBytes.length
+
+$postStream = $post.GetRequestStream()
+$postStream.write($postContentBytes, 0, $postContentBytes.length)
+$postStream.flush()
+$postStream.close()
+
+#echo "Sending POST request to $postUrl"
+
+try
+{
+    [System.Net.HttpWebResponse] $res = $post.GetResponse()
+}
+catch [System.Exception]
+{
+    [string] $message = [System.String]::Format("Message: Connection failed to url ({0}). {1}", $postUrl, $_.Exception.Message)
+    echo "Statistic: 1"
+    echo $message
+    exit 1
+}
+
+if ($res.StatusCode -ne [System.Net.HttpStatusCode]::OK)
+{
+    [string] $message = [System.String]::Format("Message: Connection failed to url ({0}). Response status code: '{1}'.", $url, $res.StatusCode)
+    echo "Statistic: 1"
+    echo $message
+    exit 1
+}
+
+$stream = $res.GetResponseStream()
+$sr = new-object System.IO.StreamReader($stream)
+$result = $sr.ReadToEnd()
+$stream.Close()
+$sr.Close()
+$res.Close()
+
+#echo "Got response from $postUrl"
+#echo $result
+
+if ($result.Contains($successLoginText))
+{
+	$watch.Stop;
+	$responseTime = $watch.Elapsed
+
+	[string] $responseTimeStatisticData = [System.String]::Format("Statistic.ResponseTime: {0}", $responseTime.TotalMilliseconds)
+	[string] $responseTimeStatisticMessage = "Message.ResponseTime: This value shows response time for Form Login script measured in milliseconds"
+
+    echo "Statistic: 0"
+	echo "Message: Login succeeded"
+	
+	echo $responseTimeStatisticData
+	echo $responseTimeStatisticMessage
+    
+	exit 0
+}
+else
+{
+    echo "Statistic: 1"
+    echo "Message: Login failed"
+    exit 1
+}</Value>
+                            <ValueType>External</ValueType>
+                            <Key>ScriptBody</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>StatusRollupType</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>true</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>Worst</Value>
+                            <ValueType>Option</ValueType>
+                            <Key>StatusRollupType</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>WrmPort</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>true</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>5985</Value>
+                            <ValueType>Integer</ValueType>
+                            <Key>WrmPort</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>WrmUrlPrefix</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>true</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>wsman</Value>
+                            <ValueType>String</ValueType>
+                            <Key>WrmUrlPrefix</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                    <d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                        <d5p1:Key>WrmUseSSL</d5p1:Key>
+                        <d5p1:Value>
+                            <Required>false</Required>
+                            <SettingLevel>Template</SettingLevel>
+                            <Value>False</Value>
+                            <ValueType>Boolean</ValueType>
+                            <Key>WrmUseSSL</Key>
+                        </d5p1:Value>
+                    </d5p1:KeyValueOfstringSettingValueyR_SGpLPx>
+                </Settings>
+                <Type>PowerShell</Type>
+                <Thresholds xmlns:d5p1="http://schemas.microsoft.com/2003/10/Serialization/Arrays" />
+                <EvidenceType>None</EvidenceType>
+                <DynamicColumnSettings>
+                    <DynamicEvidenceColumnSchema>
+                        <Cells />
+                        <ComponentID>-1</ComponentID>
+                        <ComponentTemplateID>2108</ComponentTemplateID>
+                        <DataTransform>
+                            <CheckedRadioButton>0</CheckedRadioButton>
+                            <CommonFormulaIndex>0</CommonFormulaIndex>
+                            <CommonFormulaOptions>0</CommonFormulaOptions>
+                            <Enabled>false</Enabled>
+                            <Input i:nil="true" />
+                            <OriginalFormula i:nil="true" />
+                            <Output i:nil="true" />
+                            <TestExpanded>false</TestExpanded>
+                            <TransformExpression></TransformExpression>
+                        </DataTransform>
+                        <DataTransformOverridden>false</DataTransformOverridden>
+                        <Disabled>false</Disabled>
+                        <ID>981</ID>
+                        <Label>Statistic</Label>
+                        <LabelOverridden>false</LabelOverridden>
+                        <Name>Statistic</Name>
+                        <ParentID>-1</ParentID>
+                        <Threshold i:nil="true" />
+                        <ThresholdOverridden>false</ThresholdOverridden>
+                        <Type>Numeric</Type>
+                    </DynamicEvidenceColumnSchema>
+                    <DynamicEvidenceColumnSchema>
+                        <Cells />
+                        <ComponentID>-1</ComponentID>
+                        <ComponentTemplateID>2108</ComponentTemplateID>
+                        <DataTransform>
+                            <CheckedRadioButton>0</CheckedRadioButton>
+                            <CommonFormulaIndex>0</CommonFormulaIndex>
+                            <CommonFormulaOptions i:nil="true" />
+                            <Enabled>false</Enabled>
+                            <Input i:nil="true" />
+                            <OriginalFormula i:nil="true" />
+                            <Output i:nil="true" />
+                            <TestExpanded>false</TestExpanded>
+                            <TransformExpression i:nil="true" />
+                        </DataTransform>
+                        <DataTransformOverridden>false</DataTransformOverridden>
+                        <Disabled>false</Disabled>
+                        <ID>982</ID>
+                        <Label>Statistic</Label>
+                        <LabelOverridden>false</LabelOverridden>
+                        <Name>Statistic</Name>
+                        <ParentID>-1</ParentID>
+                        <Threshold i:nil="true" />
+                        <ThresholdOverridden>false</ThresholdOverridden>
+                        <Type>String</Type>
+                    </DynamicEvidenceColumnSchema>
+                    <DynamicEvidenceColumnSchema>
+                        <Cells />
+                        <ComponentID>-1</ComponentID>
+                        <ComponentTemplateID>2108</ComponentTemplateID>
+                        <DataTransform>
+                            <CheckedRadioButton>0</CheckedRadioButton>
+                            <CommonFormulaIndex>0</CommonFormulaIndex>
+                            <CommonFormulaOptions i:nil="true" />
+                            <Enabled>false</Enabled>
+                            <Input i:nil="true" />
+                            <OriginalFormula i:nil="true" />
+                            <Output i:nil="true" />
+                            <TestExpanded>false</TestExpanded>
+                            <TransformExpression i:nil="true" />
+                        </DataTransform>
+                        <DataTransformOverridden>false</DataTransformOverridden>
+                        <Disabled>false</Disabled>
+                        <ID>983</ID>
+                        <Label>Response Time</Label>
+                        <LabelOverridden>false</LabelOverridden>
+                        <Name>ResponseTime</Name>
+                        <ParentID>-1</ParentID>
+                        <Threshold i:nil="true" />
+                        <ThresholdOverridden>false</ThresholdOverridden>
+                        <Type>String</Type>
+                    </DynamicEvidenceColumnSchema>
+                    <DynamicEvidenceColumnSchema>
+                        <Cells />
+                        <ComponentID>-1</ComponentID>
+                        <ComponentTemplateID>2108</ComponentTemplateID>
+                        <DataTransform>
+                            <CheckedRadioButton>0</CheckedRadioButton>
+                            <CommonFormulaIndex>0</CommonFormulaIndex>
+                            <CommonFormulaOptions>0</CommonFormulaOptions>
+                            <Enabled>false</Enabled>
+                            <Input i:nil="true" />
+                            <OriginalFormula i:nil="true" />
+                            <Output i:nil="true" />
+                            <TestExpanded>false</TestExpanded>
+                            <TransformExpression></TransformExpression>
+                        </DataTransform>
+                        <DataTransformOverridden>false</DataTransformOverridden>
+                        <Disabled>false</Disabled>
+                        <ID>984</ID>
+                        <Label>Response Time</Label>
+                        <LabelOverridden>false</LabelOverridden>
+                        <Name>ResponseTime</Name>
+                        <ParentID>-1</ParentID>
+                        <Threshold i:nil="true" />
+                        <ThresholdOverridden>false</ThresholdOverridden>
+                        <Type>Numeric</Type>
+                    </DynamicEvidenceColumnSchema>
+                </DynamicColumnSettings>
+                <ApplicationTemplateId>161</ApplicationTemplateId>
+                <UniqueId>c577ea04-cda0-413f-8669-e4f44e9a877c</UniqueId>
+            </ComponentTemplate>
+        </ComponentTemplates>
+        <DeletedComponentTemplates />
+        <Id>161</Id>
+        <Name>Exchange 2010 OWA Form Login (PowerShell)</Name>
+        <IsMockTemplate>false</IsMockTemplate>
+        <Description>This template assesses the availability of the Outlook Web Access service for users by performing a user login procedure and returns the length of time it takes to log in.
+
+Portions of this document were originally created by and are excerpted from the following sources: 
+
+Microsoft Corporation, “Technet Library,” Copyright © 2012 Microsoft Corporation.  All rights reserved. Available at 
+http://technet.microsoft.com/en-us/library/bb691338.aspx and http://technet.microsoft.com/en-us/library/bb201689%28EXCHG.80%29.aspx
+
+</Description>
+        <Tags>
+            <TagInfo>
+                <Name>Exchange 2010</Name>
+                <TemplateID>161</TemplateID>
+            </TagInfo>
+            <TagInfo>
+                <Name>Form Login</Name>
+                <TemplateID>161</TemplateID>
+            </TagInfo>
+            <TagInfo>
+                <Name>OWA</Name>
+                <TemplateID>161</TemplateID>
+            </TagInfo>
+            <TagInfo>
+                <Name>PowerShell</Name>
+                <TemplateID>161</TemplateID>
+            </TagInfo>
+            <TagInfo>
+                <Name>Script</Name>
+                <TemplateID>161</TemplateID>
+            </TagInfo>
+        </Tags>
+        <Created>2012-05-18T14:55:02.21Z</Created>
+        <LastModified>2012-05-18T14:56:29.29Z</LastModified>
+        <Version>5.0.1345.0</Version>
+        <ViewID>23</ViewID>
+        <ViewXml i:nil="true" />
+        <ModuleVersion xmlns:d3p1="http://schemas.datacontract.org/2004/07/System">
+            <d3p1:_Build>0</d3p1:_Build>
+            <d3p1:_Major>5</d3p1:_Major>
+            <d3p1:_Minor>2</d3p1:_Minor>
+            <d3p1:_Revision>651</d3p1:_Revision>
+        </ModuleVersion>
+        <UniqueId>aa3bc4ba-8443-4757-9270-bf501c95cfcd</UniqueId>
+    </ApplicationTemplate>
+</ArrayOfApplicationTemplate>
