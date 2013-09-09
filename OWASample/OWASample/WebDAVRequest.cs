@@ -18,15 +18,16 @@ namespace OWASample
     {
         private  string _hostName = "https://webmail.taylorcorp.com";//"https://mail.mycompany.com";
         private string _url = "https://legacymail.taylorcorp.com/exchange";//"https://webmail.taylorcorp.com/owa";
-        private string _postUrl = "https://legacymail.taylorcorp.com/exchweb/bin/auth/owaauth.dll";//"https://webmail.taylorcorp.com/owa/auth.owa";
-        private string path = "/bkwang@nltechdev.com/Calendar/";//"/public/Calendars/Board%20Room";
+        private string _postUrl = "https://legacymail.taylorcorp.com/exchweb/bin/auth/owaauth.dll";//"https://legacymail.taylorcorp.com/exchweb/bin/auth/owaauth.dll";//"https://webmail.taylorcorp.com/owa/auth.owa";
+        //private string path = "/bkwang@nltechdev.com/Calendar";//"/public/Calendars/Board%20Room";
+        private string calendarPath = "https://legacymail.taylorcorp.com/exchange/bkwang@nltechdev.com/Calendar";
         private  string _username = "corp\\bkwang";//"user";
         private  string _password = "R8ll#qqO2";//"password";
         private CookieContainer _cookieContainerPost = null;
         //private CookieContainer _cookieContainerGet = null;
         private int _requestTimeout = 15000;
-        private string _successLoginText = "New Message";
-        private TimeSpan _responseTime=new TimeSpan();
+        //private string _successLoginText = "New Message";
+       // private TimeSpan _responseTime=new TimeSpan();
 
 
         /// 
@@ -219,7 +220,7 @@ namespace OWASample
 
         public void RunQuery()
         {
-            string uri = _url + path;
+            string uri = calendarPath;//_url + path;
             HttpWebRequest request;
             WebResponse response;
             byte[] bytes;
@@ -240,23 +241,63 @@ namespace OWASample
 //AND NOT "urn:schemas:calendar:busystatus" = 'FREE' 
 //ORDER BY "urn:schemas:calendar:dtstart" ASC 
 //</></>
-            string format =
-                @"
-                    SELECT
-                        ""urn:schemas:calendar:dtstart"", ""urn:schemas:calendar:dtend"",
-                        ""urn:schemas:httpmail:subject"", ""urn:schemas:calendar:organizer"",
-                        ""DAV:parentname""
-                    FROM
-                        Scope('SHALLOW TRAVERSAL OF ""{0}""')
-                    WHERE
-                        NOT ""urn:schemas:calendar:instancetype"" = 1
-                        AND ""DAV:contentclass"" = 'urn:content-classes:appointment'
-                        AND ""urn:schemas:calendar:dtstart"" > '{1}'
-                        AND ""urn:schemas:calendar:dtend"" < '{2}'
-                    
-            ";
+//            string format =
+//                @"
+//                    SELECT
+//                        ""urn:schemas:calendar:dtstart"" As dtstart, ""urn:schemas:calendar:dtend"" As dtend,
+//                        ""urn:schemas:httpmail:subject"", ""urn:schemas:calendar:organizer"",
+//                        ""DAV:parentname""
+//                    FROM
+//                        Scope('SHALLOW TRAVERSAL OF ""{0}""')
+//                    WHERE
+//                        NOT ""urn:schemas:calendar:instancetype"" = 1
+//                        AND ""DAV:contentclass"" = 'urn:content-classes:appointment'
+//                        AND ""urn:schemas:calendar:dtstart"" > '{1}'
+//                        AND ""urn:schemas:calendar:dtend"" < '{2}'
+//                    
+//            ";
 
-            bytes = Encoding.UTF8.GetBytes(String.Format(format, uri, start, end));
+            string format =
+            "<?xml version=\"1.0\"?>"+
+            "<searchrequest xmlns=\"DAV:\">"+
+            "<sql>SELECT \"DAV:href\" as URL,"+ 
+            "\"http://schemas.microsoft.com/exchange/outlookmessageclass\" as Class, "+ 
+            "\"urn:schemas:calendar:dtstart\" as StartTime,"+ 
+            "\"urn:schemas:calendar:dtend\" as EndTime,"+ 
+            "\"urn:schemas:calendar:remindernexttime\" as ReminderTime, "+ 
+            "\"urn:schemas:calendar:location\" as Location,"+ 
+            "\"http://schemas.microsoft.com/mapi/subject\" as Subject, "+ 
+            "\"urn:schemas:calendar:instancetype\" as Type, "+
+            "\"http://schemas.microsoft.com/exchange/smallicon\" as Icon "+
+            " from SCOPE('shallow traversal of \"\"') "+
+            " WHERE NOT (\"urn:schemas:calendar:instancetype\" = 1) "+
+            " AND (\"urn:schemas:calendar:remindernexttime\" < CAST(\"2013-09-10T16:00:00Z\" as \"dateTime.tz\")) "+
+            " AND (\"urn:schemas:calendar:dtstart\" < CAST(\"2013-12-08T16:00:00Z\" as \"dateTime.tz\")) "+
+            " AND (\"urn:schemas:calendar:dtend\"   > CAST(\"2013-06-08T16:00:00Z\" as \"dateTime.tz\")) "+
+            " AND (\"DAV:ishidden\" is Null  OR \"DAV:ishidden\" = false) "+
+            "ORDER BY \"urn:schemas:calendar:dtstart\" DESC </sql>"+
+            "</searchrequest>";
+            //string format =
+            //"<?xml version=\"1.0\"?>" +
+            //"<searchrequest xmlns=\"DAV:\">" +
+            //"<sql>SELECT \"DAV:href\" as URL," +
+            //"\"http://schemas.microsoft.com/exchange/outlookmessageclass\" as Class, " +
+            //"\"urn:schemas:calendar:dtstart\" as StartTime," +
+            //"\"urn:schemas:calendar:dtend\" as EndTime," +
+            //"\"urn:schemas:calendar:remindernexttime\" as ReminderTime, " +
+            //"\"urn:schemas:calendar:location\" as Location," +
+            //"\"http://schemas.microsoft.com/mapi/subject\" as Subject, " +
+            //"\"urn:schemas:calendar:instancetype\" as Type, " +
+            //"\"http://schemas.microsoft.com/exchange/smallicon\" as Icon " +
+            //" from SCOPE('shallow traversal of \"\"') " +
+            //" WHERE NOT (\"urn:schemas:calendar:instancetype\" = 1) " +
+            //" AND (\"urn:schemas:calendar:remindernexttime\" &lt; CAST(\"2013-09-10T16:00:00Z\" as \"dateTime.tz\")) " +
+            //" AND (\"urn:schemas:calendar:dtstart\" &lt; CAST(\"2013-12-08T16:00:00Z\" as \"dateTime.tz\")) " +
+            //" AND (\"urn:schemas:calendar:dtend\"   &gt; CAST(\"2013-06-08T16:00:00Z\" as \"dateTime.tz\")) " +
+            //" AND (\"DAV:ishidden\" is Null  OR \"DAV:ishidden\" = false) " +
+            //"ORDER BY \"urn:schemas:calendar:dtstart\" DESC </sql>" +
+            //"</searchrequest>";
+            bytes = Encoding.UTF8.GetBytes(format/*String.Format(format, uri, start, end)*/);
 
             // Use the authorization cookies we stored in the authentication method.
             ServicePointManager.SecurityProtocol = SecurityProtocolType.Ssl3;
