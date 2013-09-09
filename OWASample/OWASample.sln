@@ -15,13 +15,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWA.Task", "OWA.Task\OWA.Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWA.Internal", "OWA.Internal\OWA.Internal.csproj", "{B61050AD-7A4B-4DD6-9252-C2C8E7298EF0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OWA.Model", "OWA.Model\OWA.Model.csproj", "{053F5F57-7D23-443B-ACEA-F9196179AB00}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Authentication", "Orange.OWA.Authentication\Orange.OWA.Authentication.csproj", "{67543CD5-13F6-4BDB-8C48-C7867EED05E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.HttpWeb", "Orange.OWA.HttpWeb\Orange.OWA.HttpWeb.csproj", "{FF08220C-BE1B-4188-B44D-418F71DAAE74}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 1
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://baikangwang.visualstudio.com/defaultcollection
 		SccProjectUniqueName0 = Orange.OWA.Authentication\\Orange.OWA.Authentication.csproj
@@ -29,36 +29,6 @@ Global
 		SccAuxPath0 = https://baikangwang.visualstudio.com/defaultcollection
 		SccLocalPath0 = Orange.OWA.Authentication
 		SccProvider0 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName1 = OWA.Calendar\\OWA.Calendar.csproj
-		SccProjectName1 = OWA.Calendar
-		SccAuxPath1 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath1 = OWA.Calendar
-		SccProvider1 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName2 = OWA.InBox\\OWA.InBox.csproj
-		SccProjectName2 = OWA.InBox
-		SccAuxPath2 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath2 = OWA.InBox
-		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName3 = OWA.Internal\\OWA.Internal.csproj
-		SccProjectName3 = OWA.Internal
-		SccAuxPath3 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath3 = OWA.Internal
-		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName4 = OWA.Model\\OWA.Model.csproj
-		SccProjectName4 = OWA.Model
-		SccAuxPath4 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath4 = OWA.Model
-		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName5 = OWA.Task\\OWA.Task.csproj
-		SccProjectName5 = OWA.Task
-		SccAuxPath5 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath5 = OWA.Task
-		SccProvider5 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccProjectUniqueName6 = OWA.Template\\OWA.Template.csproj
-		SccProjectName6 = OWA.Template
-		SccAuxPath6 = https://baikangwang.visualstudio.com/defaultcollection
-		SccLocalPath6 = OWA.Template
-		SccProvider6 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -139,16 +109,6 @@ Global
 		{B61050AD-7A4B-4DD6-9252-C2C8E7298EF0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{B61050AD-7A4B-4DD6-9252-C2C8E7298EF0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{B61050AD-7A4B-4DD6-9252-C2C8E7298EF0}.Release|x86.ActiveCfg = Release|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Release|Any CPU.Build.0 = Release|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{053F5F57-7D23-443B-ACEA-F9196179AB00}.Release|x86.ActiveCfg = Release|Any CPU
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -159,6 +119,16 @@ Global
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Release|x86.ActiveCfg = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
