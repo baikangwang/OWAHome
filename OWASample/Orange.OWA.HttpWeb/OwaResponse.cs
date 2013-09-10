@@ -1,22 +1,20 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
 
 namespace Orange.OWA.HttpWeb
 {
-    public class Response:IDisposable
+    public class OwaResponse:IDisposable
     {
         private HttpWebResponse _response;
-        private CookieContainer _cookies;
+        private IList<Cookie> _cookies;
 
-        internal Response(HttpWebResponse response)
+        internal OwaResponse(HttpWebResponse response)
         {
             _response = response;
 
-            _cookies = new CookieContainer();
+            _cookies = new List<Cookie>();
             
             if (response.Cookies != null)
             {
@@ -27,7 +25,7 @@ namespace Orange.OWA.HttpWeb
             }
         }
 
-        public CookieContainer Cookies { get { return _cookies; } }
+        public IList<Cookie> Cookies { get { return _cookies; } }
 
         public Stream ResponseStream
         {

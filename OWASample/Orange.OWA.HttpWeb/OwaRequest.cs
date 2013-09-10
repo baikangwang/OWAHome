@@ -5,12 +5,12 @@ using System.Net;
 
 namespace Orange.OWA.HttpWeb
 {
-    public class Request
+    public class OwaRequest
     {
         private readonly HttpWebRequest _request;
         private readonly byte[] _content;
 
-        protected Request(string method, string url, params object[] args)
+        protected OwaRequest(string method, string url, params object[] args)
         {
             _request = (HttpWebRequest)System.Net.WebRequest.Create(url);
             _request.Method = method;
@@ -27,7 +27,33 @@ namespace Orange.OWA.HttpWeb
 
             if (args.Length > 0)
             {
-                IDictionary<string, string> headers = args[0] as IDictionary<string, string>;
+                byte[] content = args[0] as byte[];
+                if (content != null)
+                {
+                    _request.ContentLength = content.Length;
+                    this._content = content;
+                }
+            }
+            
+            if (args.Length > 1)
+            {
+                IList<Cookie> cookies = args[1] as IList<Cookie>;
+                CookieContainer cookieContainer=new CookieContainer();
+                if (cookies != null)
+                {
+                    foreach (Cookie cookie in cookies)
+                    {
+                        cookieContainer.Add(cookie);
+                    }
+                }
+
+                _request.CookieContainer = cookieContainer;
+            }
+
+            
+            if (args.Length > 2)
+            {
+                IDictionary<string, string> headers = args[2] as IDictionary<string, string>;
                 if (headers != null)
                 {
                     foreach (string key in headers.Keys)
@@ -36,25 +62,9 @@ namespace Orange.OWA.HttpWeb
                     }
                 }
             }
-
-            if (args.Length > 1)
-            {
-                CookieContainer cookies = args[1] as CookieContainer;
-                _request.CookieContainer = cookies ?? new CookieContainer();
-            }
-
-            if (args.Length > 2)
-            {
-                byte[] content = args[2] as byte[];
-                if (content != null)
-                {
-                    _request.ContentLength = content.Length;
-                    this._content = content;
-                }
-            }
         }
 
-        public Response Send()
+        public OwaResponse Send()
         {
             if (_content != null)
             {
@@ -75,24 +85,24 @@ namespace Orange.OWA.HttpWeb
                 throw new Exception(string.Format("Message: request failed to url ({0}). {1}", _request.RequestUri, ex.Message));
             }
 
-            Response owaResponse=new Response(response);
+            OwaResponse owaOwaResponse=new OwaResponse(response);
 
-            return owaResponse;
+            return owaOwaResponse;
         }
 
-        public static Request Get(string url)
+        public static OwaRequest Get(string url)
         {
-            return new Request("Get",url);
+            return new OwaRequest("Get",url);
         }
 
-        public static Request Post(string url, IDictionary<string, string> headers, CookieContainer cookies, byte[] content)
+        public static OwaRequest Post(string url, byte[] content, IList<Cookie> cookies = null, IDictionary<string, string> headers = null)
         {
-            return new Request("POST",url,headers,cookies,content);
+            return new OwaRequest("POST", url, content, cookies, headers);
         }
 
-        public static Request Search(string url, IDictionary<string, string> headers, CookieContainer cookies, byte[] content)
+        public static OwaRequest Search(string url, byte[] content, IList<Cookie> cookies = null, IDictionary<string, string> headers = null)
         {
-            return new Request("SEARCH",url,headers,cookies,content);
+            return new OwaRequest("SEARCH", url, content, cookies, headers);
         }
     }
 }
