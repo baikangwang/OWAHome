@@ -27,9 +27,9 @@ namespace Orange.OWA.HttpWeb
 
         public IList<Cookie> Cookies { get { return _cookies; } }
 
-        public Stream ResponseStream
+        public Stream GetResponseStream()
         {
-            get { return _response.GetResponseStream(); }
+            return _response.GetResponseStream();
         }
 
         public string GetResponseHeader(string key)

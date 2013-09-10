@@ -8,20 +8,31 @@ namespace Orange.OWA.Authentication
 {
     public class AuthenticationManager
     {
-        private IList<Cookie> _cookieCache;
+        private IList<Cookie> _cookieCache = null;
         private static AuthenticationManager _mgr=new AuthenticationManager();
 
-        public IList<Cookie> CookieCache { get { return _cookieCache; } }
+        public IList<Cookie> CookieCache { get { return _cookieCache ?? (_cookieCache = Authenticate(_host, _userName, _password)); }
+        }
         public static AuthenticationManager Current { get { return _mgr; } }
+
+        private string _host;
+        private string _userName;
+        private string _password;
+        private string _emailAddress;
         
         protected AuthenticationManager()
         {
             _cookieCache=new List<Cookie>();
-            string host = "webmail.taylorcorp.com";
-            string userName = "corp\\bkwang";
-            string password = "R8ll#qqO2";
-            _cookieCache = Authenticate(host, userName, password);
+            _host = "webmail.taylorcorp.com";
+            _userName = "corp\\bkwang";
+            _password = "R8ll#qqO2";
+            _emailAddress = "bkwang@nltechdev.com";
+            _cookieCache = Authenticate(_host, _userName, _password);
         }
+
+        public string Host { get { return _host; } }
+        public string UserName { get { return _userName; } }
+        public string EmailAddress { get { return _emailAddress; } }
 
         protected IList<Cookie> Authenticate(string host,string userName,string password)
         {

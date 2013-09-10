@@ -90,6 +90,18 @@ namespace Orange.OWA.HttpWeb
             return owaOwaResponse;
         }
 
+        public string Accept
+        {
+            get { return _request.Accept; }
+            set { _request.Accept = value; }
+        }
+
+        public string ContentType
+        {
+            get { return _request.ContentType; }
+            set { _request.ContentType = value; }
+        }
+
         public static OwaRequest Get(string url)
         {
             return new OwaRequest("Get",url);

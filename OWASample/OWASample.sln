@@ -21,9 +21,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.HttpWeb", "Orang
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Test", "Orange.OWA.Test\Orange.OWA.Test.csproj", "{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Model", "Orange.OWA.Model\Orange.OWA.Model.csproj", "{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Gateway", "Orange.OWA.Gateway\Orange.OWA.Gateway.csproj", "{3A702EFF-8BDE-4679-80C0-59A0E0C81601}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 3
+		SccNumberOfProjects = 5
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://baikangwang.visualstudio.com/defaultcollection
 		SccProjectUniqueName0 = Orange.OWA.Authentication\\Orange.OWA.Authentication.csproj
@@ -41,6 +45,16 @@ Global
 		SccAuxPath2 = https://baikangwang.visualstudio.com/defaultcollection
 		SccLocalPath2 = Orange.OWA.Test
 		SccProvider2 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName3 = Orange.OWA.Model\\Orange.OWA.Model.csproj
+		SccProjectName3 = Orange.OWA.Model
+		SccAuxPath3 = https://baikangwang.visualstudio.com/defaultcollection
+		SccLocalPath3 = Orange.OWA.Model
+		SccProvider3 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccProjectUniqueName4 = Orange.OWA.Gateway\\Orange.OWA.Gateway.csproj
+		SccProjectName4 = Orange.OWA.Gateway
+		SccAuxPath4 = https://baikangwang.visualstudio.com/defaultcollection
+		SccLocalPath4 = Orange.OWA.Gateway
+		SccProvider4 = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +165,26 @@ Global
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|x86.ActiveCfg = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
