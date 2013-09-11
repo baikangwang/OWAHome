@@ -2,8 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Xml;
 using Orange.OWA.Authentication;
 using Orange.OWA.HttpWeb;
+using Orange.OWA.Interface;
+using Orange.OWA.Model.Email;
 
 namespace Orange.OWA.Gateway
 {
@@ -78,6 +81,23 @@ namespace Orange.OWA.Gateway
             }
 
             return result;
+        }
+
+        public static IEmail Deserialize(string content)
+        {
+            //XmlDocument doc = new XmlDocument();
+            //doc.Load(shipAckFile);
+            
+            //XmlNamespaceManager nsmgr = new XmlNamespaceManager(doc.NameTable);
+            //nsmgr.AddNamespace("ack", "http://www.icsm.com/icsmxml");
+            //XmlNode orderReferenceNode = doc.SelectSingleNode("/ack:ICSMXML/ack:Request/ack:ShipNoticeRequest/ack:ShipNoticePortion/ack:OrderReference", nsmgr);
+
+            return new Email();
+        }
+
+        public static string Serialize(IEmail email)
+        {
+            return string.Empty;
         }
     }
 }

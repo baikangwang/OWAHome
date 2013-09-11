@@ -49,7 +49,25 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Email\EmailXMLSample.xml" />
+    <Content Include="Sample\DAV.xml" />
+    <Content Include="Sample\EmailSample.xml" />
+    <Content Include="Sample\EmailXMLSample.xml" />
+    <Content Include="Sample\HttpMail.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sample\MailHeader.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sample\Exchange.xml">
+      <SubType>Designer</SubType>
+    </Content>
+    <Content Include="Sample\Reply.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Orange.OWA.Interface\Orange.OWA.Interface.csproj">
+      <Project>{c6c97a9e-b5db-4360-9119-c0464c0e8a95}</Project>
+      <Name>Orange.OWA.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
