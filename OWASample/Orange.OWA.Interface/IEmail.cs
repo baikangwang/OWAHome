@@ -8,6 +8,7 @@ namespace Orange.OWA.Interface
 {
     public interface IEmail
     {
+        string Id { get; set; }
         string From { get; set; }                   //"Ding, Li (Northern Lights)" &lt;lding@nltechdev.com&gt;
         //string FromName { get; set; }               //Ding, Li (Northern Lights)
         //string FromMail { get; set; }             //lding@nltechdev.com
@@ -19,7 +20,7 @@ namespace Orange.OWA.Interface
         string Subject { get; set; }
         //string NormalizedSubject { get; set; }    //CMFG-431 / Universal converter concern
         DateTime DateRecieved { get; set; }         //dateTime.tz:2013-09-10T03:39:46.190Z
-        DateTime Date { get; set; }                 //dateTime.tz:2013-09-10T03:39:41.143Z
+        //DateTime Date { get; set; }                 //dateTime.tz:2013-09-10T03:39:41.143Z
         //string SenderName { get; set; }           //Ding, Li (Northern Lights)         
         string TextDescription { get; set; }
         string HtmlDescription { get; set; }
@@ -27,5 +28,6 @@ namespace Orange.OWA.Interface
         bool HasAttachment { get; set; }
         bool Read { get; set; }
         int Priority { get; set; }
+        string Url { get; set; }
     }
 }

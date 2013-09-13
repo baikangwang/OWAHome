@@ -74,6 +74,10 @@
       <Project>{ff08220c-be1b-4188-b44d-418f71daae74}</Project>
       <Name>Orange.OWA.HttpWeb</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Orange.OWA.Interface\Orange.OWA.Interface.csproj">
+      <Project>{c6c97a9e-b5db-4360-9119-c0464c0e8a95}</Project>
+      <Name>Orange.OWA.Interface</Name>
+    </ProjectReference>
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
