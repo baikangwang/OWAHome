@@ -14,6 +14,11 @@ namespace Orange.OWA.Gateway
 {
     public class InBoxGateway
     {
+        public static string InBoxUrl
+        {
+            get { return string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress); }
+        }
+
         public static string GetEmailSimpleList(int startIndex, int endIndex)
         {
             StringBuilder sb = new StringBuilder();
@@ -30,7 +35,7 @@ namespace Orange.OWA.Gateway
 
             byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
 
-            string url = string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
+            string url = InBoxUrl;//string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
 
             OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
                                                    new Dictionary<string, string>() {{"depth", "1"}, {"Translate", "f"}});
@@ -66,7 +71,7 @@ namespace Orange.OWA.Gateway
 
             byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
 
-            string url = string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
+            string url = InBoxUrl;//string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
 
             OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
                                                    new Dictionary<string, string>() { { "depth", "1" }, { "Translate", "f" } });
@@ -143,42 +148,34 @@ namespace Orange.OWA.Gateway
         {
             StringBuilder sb = new StringBuilder();
 
-            //sb.AppendLine("<?xml version=\"1.0\"?>");
-            //sb.AppendLine("<searchrequest xmlns:a=\"DAV:\" xmlns:b=\"urn:uuid:c2f41010-65b3-11d1-a29f-00aa00c14882/\" xmlns:e=\"urn:schemas:httpmail:\" xmlns:d=\"urn:schemas:mailheader:\" xmlns:c=\"xml:\">");
-            //sb.AppendLine("	<sql>SELECT \"d:message-id\" as id, \"e:from\" as from, \"e:datereceived\" as datereceived, \"e:cc\" as cc, \"d:subject\" as subject, \"e:to\" as to,\"e:htmldescription\" as htmldescription,\"e:textdescription\" as textdescription, \"e:hasattachment\" as hasattachment,\"e:read\" as read, \"e:thread-topic\" as topic, \"e:date\" as date, \"e:submitted\" as submitted, \"e:priority\" as priority");
-            //sb.AppendLine("FROM Scope('SHALLOW TRAVERSAL OF \"\"')");
-            //sb.AppendLine("WHERE \"d:message-id\" = \""+System.Security.SecurityElement.Escape(id)+"\" AND \"a:isfolder\" = false");
-            //sb.AppendLine("	</sql>");
-            //sb.AppendLine("</searchrequest>");
-
+            //string inBoxUrl = string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
+            
             sb.AppendLine("<?xml version=\"1.0\"?>");
             sb.AppendLine("<searchrequest xmlns=\"DAV:\">");
             sb.AppendLine("	<sql>SELECT \"urn:schemas:mailheader:message-id\" as id, \"urn:schemas:httpmail:from\" as from, \"urn:schemas:httpmail:datereceived\" as datereceived, \"urn:schemas:httpmail:cc\" as cc, \"urn:schemas:mailheader:subject\" as subject, \"urn:schemas:httpmail:to\" as to,\"urn:schemas:httpmail:htmldescription\" as htmldescription,\"urn:schemas:httpmail:textdescription\" as textdescription, \"urn:schemas:httpmail:hasattachment\" as hasattachment,\"urn:schemas:httpmail:read\" as read, \"urn:schemas:httpmail:thread-topic\" as topic, \"urn:schemas:httpmail:submitted\" as submitted, \"urn:schemas:httpmail:priority\" as priority");
-            sb.AppendLine("FROM Scope('SHALLOW TRAVERSAL OF \"\"')");
-            //sb.AppendLine("WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false");
-            //sb.AppendLine("ORDER BY \"urn:schemas:httpmail:datereceived\" DESC");
-            sb.AppendLine("WHERE \"DAV:href\" = " + System.Security.SecurityElement.Escape(id) + " AND \"DAV:isfolder\" = false");
+            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", InBoxUrl));
+            sb.AppendLine("WHERE \"urn:schemas:mailheader:message-id\" = '" + System.Security.SecurityElement.Escape(id) + "' AND \"DAV:isfolder\" = false");
             sb.AppendLine("	</sql>");
-            //sb.AppendFormat("	<range type=\"row\">{0}-{1}</range>{2}", 0, 24, Environment.NewLine);
             sb.AppendLine("</searchrequest>");
 
-            byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
+            string query = sb.ToString();
 
-            string url = string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
+            byte[] content = Encoding.UTF8.GetBytes(query);
+
+            string url = InBoxUrl;
 
             OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
                                                    new Dictionary<string, string>() { { "depth", "1" }, { "Translate", "f" } });
             request.Accept = "*/*";
             request.ContentType = "text/xml";
 
-            //string result;
             IList<IEmail> emails;
             using (OwaResponse response = request.Send())
             {
                 emails = Deserialize(response.GetResponseStream());
             }
 
-            return emails.FirstOrDefault(); //emails.SingleOrDefault();
+            return emails.SingleOrDefault();
         }
 
         public static string Serialize(IEmail email)

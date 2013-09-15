@@ -27,8 +27,9 @@ namespace Orange.OWA.Test
         [TestMethod]
         public void GetEmailTest()
         {
-            string url = "https://webmail.taylorcorp.com/exchange/bkwang@nltechdev.com/Inbox/test-2.EML";
-            IEmail email = InBoxGateway.GetEmail(url);
+            //string url = "https://webmail.taylorcorp.com/exchange/bkwang@nltechdev.com/Inbox/test-2.EML";
+            string id = "<42A26A4D7327004090E5E8144E9B080808E031AA@tcex04.corp.tcc.inet>";
+            IEmail email = InBoxGateway.GetEmail(id);
             if(email==null)
                 return;
             Console.WriteLine("id:{0}",email.Id);

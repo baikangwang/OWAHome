@@ -23,7 +23,7 @@ namespace Orange.OWA.Authentication
         protected AuthenticationManager()
         {
             _cookieCache=new List<Cookie>();
-            _host = "webmail.taylorcorp.com";
+            _host = "legacymail.taylorcorp.com";//"webmail.taylorcorp.com";
             _userName = "corp\\bkwang";
             _password = "R8ll#qqO2";
             _emailAddress = "bkwang@nltechdev.com";
