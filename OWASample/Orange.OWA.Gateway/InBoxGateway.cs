@@ -63,7 +63,7 @@ namespace Orange.OWA.Gateway
             //sb.AppendLine("	<sql>SELECT \"http://schemas.microsoft.com/exchange/smallicon\" as smicon, \"http://schemas.microsoft.com/mapi/sent_representing_name\" as from, \"urn:schemas:httpmail:datereceived\" as recvd, \"http://schemas.microsoft.com/mapi/proptag/x10900003\" as flag, \"http://schemas.microsoft.com/mapi/subject\" as subj, \"http://schemas.microsoft.com/exchange/x-priority-long\" as prio, \"urn:schemas:httpmail:hasattachment\" as fattach,\"urn:schemas:httpmail:read\" as r, \"http://schemas.microsoft.com/exchange/outlookmessageclass\" as m, \"http://schemas.microsoft.com/mapi/proptag/x10950003\" as flagcolor");
             sb.AppendLine("    <sql>SELECT *");
             sb.AppendLine("FROM Scope('SHALLOW TRAVERSAL OF \"\"')");
-            sb.AppendLine("WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false");
+            sb.AppendLine("WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false AND \"urn:schemas:mailheader:message-id\" = '" + System.Security.SecurityElement.Escape("<42A26A4D7327004090E5E8144E9B080808E031AA@tcex04.corp.tcc.inet>") + "'");
             sb.AppendLine("ORDER BY \"urn:schemas:httpmail:datereceived\" DESC");
             sb.AppendLine("	</sql>");
             sb.AppendFormat("	<range type=\"row\">{0}-{1}</range>{2}", startIndex, endIndex, Environment.NewLine);
