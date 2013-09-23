@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using Orange.OWA.HttpWeb;
+using Orange.OWA.Interface;
 
 namespace Orange.OWA.Authentication
 {
@@ -19,7 +20,9 @@ namespace Orange.OWA.Authentication
         private string _userName;
         private string _password;
         private string _emailAddress;
-        
+
+        private IAccount _currentAccount;
+
         protected AuthenticationManager()
         {
             _cookieCache=new List<Cookie>();
@@ -27,6 +30,7 @@ namespace Orange.OWA.Authentication
             _userName = "corp\\bkwang";
             _password = "R8ll#qqO2";
             _emailAddress = "bkwang@nltechdev.com";
+            
             _cookieCache = Authenticate(_host, _userName, _password);
         }
 

@@ -22,7 +22,7 @@ namespace Orange.OWA.Gateway
                                                                     {
                                                                         new Account(Guid.NewGuid(), "corp\bkwang", "R8ll#qqO2",
                                                                                     "webmail.taylorcorp.com",
-                                                                                    "bkwang@nltechdev.com"),
+                                                                                    "bkwang@nltechdev.com",true),
                                                                         new Account(Guid.NewGuid(),"corp\bkwang", "R8ll#qqO2",
                                                                                     "lagecy.taylorcorp.com",
                                                                                     "bkwang@nltechdev.com")

@@ -11,5 +11,7 @@ namespace Orange.OWA.Interface
         string Password { get; set; }
         string Host { get; set; }
         string Email { get; set; }
+        bool IsDefault { get; set; }
+        Guid Id { get; set; }
     }
 }
