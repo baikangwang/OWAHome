@@ -12,7 +12,7 @@ namespace Orange.OWA.Test
         [TestMethod]
         public void GetEmailSimpleListTest()
         {
-            string actual = InBoxGateway.GetEmailSimpleList(0, 24);
+            string actual = InBoxGateway.GetEmailSimpleList<string>(0, 24);
             Console.WriteLine(actual);
             Assert.IsTrue(!string.IsNullOrEmpty(actual));
         }
@@ -30,7 +30,7 @@ namespace Orange.OWA.Test
         {
             //string url = "https://webmail.taylorcorp.com/exchange/bkwang@nltechdev.com/Inbox/test-2.EML";
             string id = "<42A26A4D7327004090E5E8144E9B080808E031AA@tcex04.corp.tcc.inet>";
-            IEmail email = InBoxGateway.GetEmail(id);
+            IEmail email = InBoxGateway.GetEmail<IEmail>(id);
             if(email==null)
                 return;
             //Console.WriteLine("id:{0}",email.Id);

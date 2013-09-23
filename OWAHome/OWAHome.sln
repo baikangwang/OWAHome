@@ -13,9 +13,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Model", "Orange.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Test", "Orange.OWA.Test\Orange.OWA.Test.csproj", "{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Exchange", "Orange.OWA.Exchange\Orange.OWA.Exchange.csproj", "{DB516102-49A2-4B43-8DC0-19FF8759C7CC}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 8
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
 		SccTeamFoundationServer = https://baikangwang.visualstudio.com/defaultcollection
 		SccLocalPath0 = .
@@ -37,6 +39,9 @@ Global
 		SccProjectUniqueName6 = Orange.OWA.Test\\Orange.OWA.Test.csproj
 		SccProjectName6 = Orange.OWA.Test
 		SccLocalPath6 = Orange.OWA.Test
+		SccProjectUniqueName7 = Orange.OWA.Exchange\\Orange.OWA.Exchange.csproj
+		SccProjectName7 = Orange.OWA.Exchange
+		SccLocalPath7 = Orange.OWA.Exchange
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +72,10 @@ Global
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB516102-49A2-4B43-8DC0-19FF8759C7CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB516102-49A2-4B43-8DC0-19FF8759C7CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB516102-49A2-4B43-8DC0-19FF8759C7CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB516102-49A2-4B43-8DC0-19FF8759C7CC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,15 @@
+﻿<Window x:Class="Orange.OWA.Exchange.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow">
+    <DockPanel>
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Left">
+            <StackPanel Width="100">
+                <Button x:Name="btInBox" Content="InBox"/>
+                <Button x:Name="btSetting" Content="Setting"/>
+            </StackPanel>
+            <TreeView x:Name="twEmailList" Width="189"/>
+        </StackPanel>
+        <WebBrowser DockPanel.Dock="Right" x:Name="wbEmail" />
+    </DockPanel>
+</Window>

@@ -19,15 +19,15 @@ namespace Orange.OWA.Gateway
             get { return string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress); }
         }
 
-        public static string GetEmailSimpleList(int startIndex, int endIndex)
+        public static T GetEmailSimpleList<T>(int startIndex, int endIndex)
         {
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("<?xml version=\"1.0\"?>");
             sb.AppendLine("<searchrequest xmlns=\"DAV:\">");
-            sb.AppendLine("	<sql>SELECT \"http://schemas.microsoft.com/exchange/smallicon\" as smicon, \"http://schemas.microsoft.com/mapi/sent_representing_name\" as from, \"urn:schemas:httpmail:datereceived\" as recvd, \"http://schemas.microsoft.com/mapi/proptag/x10900003\" as flag, \"http://schemas.microsoft.com/mapi/subject\" as subj, \"http://schemas.microsoft.com/exchange/x-priority-long\" as prio, \"urn:schemas:httpmail:hasattachment\" as fattach,\"urn:schemas:httpmail:read\" as r, \"http://schemas.microsoft.com/exchange/outlookmessageclass\" as m, \"http://schemas.microsoft.com/mapi/proptag/x10950003\" as flagcolor");
-            sb.AppendLine("FROM Scope('SHALLOW TRAVERSAL OF \"\"')");
-            sb.AppendLine("WHERE \"http://schemas.microsoft.com/mapi/proptag/0x67aa000b\" = false AND \"DAV:isfolder\" = false");
+            sb.AppendLine("	<sql>SELECT \"urn:schemas:mailheader:message-id\" as id, \"urn:schemas:httpmail:from\" as from, \"urn:schemas:httpmail:datereceived\" as datereceived, \"urn:schemas:httpmail:cc\" as cc, \"urn:schemas:mailheader:subject\" as subject, \"urn:schemas:httpmail:to\" as to, \"urn:schemas:httpmail:read\" as read, \"urn:schemas:httpmail:thread-topic\" as topic, \"urn:schemas:httpmail:submitted\" as submitted, \"urn:schemas:httpmail:priority\" as priority");
+            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", InBoxUrl));
+            sb.AppendLine("WHERE \"DAV:isfolder\" = false");
             sb.AppendLine("ORDER BY \"urn:schemas:httpmail:datereceived\" DESC");
             sb.AppendLine("	</sql>");
             sb.AppendFormat("	<range type=\"row\">{0}-{1}</range>{2}",startIndex,endIndex,Environment.NewLine);
@@ -42,16 +42,29 @@ namespace Orange.OWA.Gateway
             request.Accept = "*/*";
             request.ContentType = "text/xml";
 
-            string result;
-            using (OwaResponse response = request.Send())
+            object result=null;
+
+            Type t = typeof (T);
+
+            if (t == typeof( string))
             {
-                using (StreamReader sr=new StreamReader(response.GetResponseStream(),Encoding.UTF8))
+                using (OwaResponse response = request.Send())
                 {
-                    result = sr.ReadToEnd();
+                    using (StreamReader sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        result = sr.ReadToEnd();
+                    }
+                }
+            }
+            else if(t==typeof(IList<IEmail>))
+            {
+                using (OwaResponse response = request.Send())
+                {
+                    result = Deserialize(response.GetResponseStream());
                 }
             }
 
-            return result;
+            return result == null ? default(T) : (T) Convert.ChangeType(result, t);
         }
 
         public static string GetEmailFullList(int startIndex, int endIndex)
@@ -90,7 +103,7 @@ namespace Orange.OWA.Gateway
             return result;
         }
 
-        public static IEmail Deserialize(XmlNode content,XmlNamespaceManager xnsMgr)
+        public static IEmail Deserialize(XmlNode content, XmlNamespaceManager xnsMgr)
         {
             IEmail email = new Email();
             email.Url = HttpUtility.UrlDecode(content.GetNodeValue<string>("a:href", xnsMgr));
@@ -144,7 +157,7 @@ namespace Orange.OWA.Gateway
             return emails;
         }
 
-        public static IEmail GetEmail(string id)
+        public static T GetEmail<T>(string id)
         {
             StringBuilder sb = new StringBuilder();
 
@@ -169,13 +182,30 @@ namespace Orange.OWA.Gateway
             request.Accept = "*/*";
             request.ContentType = "text/xml";
 
-            IList<IEmail> emails;
-            using (OwaResponse response = request.Send())
+            object result = null;
+            Type t = typeof (T);
+
+            if (t == typeof(string))
             {
-                emails = Deserialize(response.GetResponseStream());
+                using (OwaResponse response = request.Send())
+                {
+                    using (StreamReader sr = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                    {
+                        result = sr.ReadToEnd();
+                    }
+                }
+            }
+            else if (t == typeof(IEmail))
+            {
+                IList<IEmail> emails;
+                using (OwaResponse response = request.Send())
+                {
+                    emails = Deserialize(response.GetResponseStream());
+                }
+                result=emails.SingleOrDefault();
             }
 
-            return emails.SingleOrDefault();
+            return result == null ? default(T) : (T)Convert.ChangeType(result, t);
         }
 
         public static string Serialize(IEmail email)

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccountGateway.cs" />
     <Compile Include="Ext\XmlDocumentExt.cs" />
     <Compile Include="InBoxGateway.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
