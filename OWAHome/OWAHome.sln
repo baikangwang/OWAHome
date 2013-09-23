@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Authentication", "Orange.OWA.Authentication\Orange.OWA.Authentication.csproj", "{67543CD5-13F6-4BDB-8C48-C7867EED05E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Gateway", "Orange.OWA.Gateway\Orange.OWA.Gateway.csproj", "{3A702EFF-8BDE-4679-80C0-59A0E0C81601}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.HttpWeb", "Orange.OWA.HttpWeb\Orange.OWA.HttpWeb.csproj", "{FF08220C-BE1B-4188-B44D-418F71DAAE74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Interface", "Orange.OWA.Interface\Orange.OWA.Interface.csproj", "{C6C97A9E-B5DB-4360-9119-C0464C0E8A95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Model", "Orange.OWA.Model\Orange.OWA.Model.csproj", "{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orange.OWA.Test", "Orange.OWA.Test\Orange.OWA.Test.csproj", "{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://baikangwang.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = Orange.OWA.Authentication\\Orange.OWA.Authentication.csproj
+		SccProjectName1 = Orange.OWA.Authentication
+		SccLocalPath1 = Orange.OWA.Authentication
+		SccProjectUniqueName2 = Orange.OWA.Gateway\\Orange.OWA.Gateway.csproj
+		SccProjectName2 = Orange.OWA.Gateway
+		SccLocalPath2 = Orange.OWA.Gateway
+		SccProjectUniqueName3 = Orange.OWA.HttpWeb\\Orange.OWA.HttpWeb.csproj
+		SccProjectName3 = Orange.OWA.HttpWeb
+		SccLocalPath3 = Orange.OWA.HttpWeb
+		SccProjectUniqueName4 = Orange.OWA.Interface\\Orange.OWA.Interface.csproj
+		SccProjectName4 = Orange.OWA.Interface
+		SccLocalPath4 = Orange.OWA.Interface
+		SccProjectUniqueName5 = Orange.OWA.Model\\Orange.OWA.Model.csproj
+		SccProjectName5 = Orange.OWA.Model
+		SccLocalPath5 = Orange.OWA.Model
+		SccProjectUniqueName6 = Orange.OWA.Test\\Orange.OWA.Test.csproj
+		SccProjectName6 = Orange.OWA.Test
+		SccLocalPath6 = Orange.OWA.Test
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67543CD5-13F6-4BDB-8C48-C7867EED05E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3A702EFF-8BDE-4679-80C0-59A0E0C81601}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF08220C-BE1B-4188-B44D-418F71DAAE74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C6C97A9E-B5DB-4360-9119-C0464C0E8A95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C6C97A9E-B5DB-4360-9119-C0464C0E8A95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C6C97A9E-B5DB-4360-9119-C0464C0E8A95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C6C97A9E-B5DB-4360-9119-C0464C0E8A95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB7DA58B-71B4-479D-BBC1-7791AF4FDDD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A0C8E91-0893-4B21-9526-1450EB4EDAE6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
