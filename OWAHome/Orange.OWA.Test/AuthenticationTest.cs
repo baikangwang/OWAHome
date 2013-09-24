@@ -1,19 +1,30 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net;
+using System.Security.Authentication;
 using System.Text;
 using KlerksSoft;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Orange.OWA.Gateway;
+using Orange.OWA.Interface;
 
 namespace Orange.OWA.Test
 {
     [TestClass]
     public class AuthenticationTest
     {
+        [TestInitialize]
+        public void Init()
+        {
+            log4net.Config.XmlConfigurator.Configure();
+        }
+
         [TestMethod]
         public void LogonTest()
         {
-            IList<Cookie> cookies = Orange.OWA.Authentication.AuthenticationManager.Current.CookieCache;
+            IList<Cookie> cookies = Authentication.AuthenticationManager.Current.CookieCache;
             
             Assert.IsTrue(cookies!=null);
             
@@ -43,5 +54,85 @@ namespace Orange.OWA.Test
 
             Assert.IsTrue(cookies.Count!=0);
         }
+
+        [TestMethod]
+        public void RefreshTest()
+        {
+            IList<Cookie> cookies = new List<Cookie>();
+
+            #region Test email host domain
+
+            //IList<IAccount> accounts = AccountGateway.GetAll();
+
+            //foreach (IAccount account in accounts)
+            //{
+            //    account.IsDefault = account.Host == "legacymail.taylorcorp.com";
+            //}
+
+            //accounts= AccountGateway.Update(accounts);
+
+            #endregion
+
+            #region Test wrong email host domain
+
+            IAccount a = AccountGateway.GetDefault();
+            a.Host = "test.test.com";
+            a = AccountGateway.Update(a);
+
+            #endregion
+
+            Process.Start(AccountGateway.AccountSettingPath);
+
+            try
+            {
+                Authentication.AuthenticationManager.Refresh();
+                cookies = Authentication.AuthenticationManager.Current.CookieCache;
+            }
+            catch (Exception e)
+            {
+                Assert.IsInstanceOfType(e, typeof(AuthenticationException));
+                Console.WriteLine(e.Message);
+            }
+
+            Assert.IsTrue(cookies.Count < 2);
+
+            #region Test email host domain
+
+            //foreach (IAccount account in accounts)
+            //{
+            //    account.IsDefault = account.Host == "webmail.taylorcorp.com";
+            //}
+            //AccountGateway.Update(accounts);
+
+            #endregion
+
+            #region Test wrong email host domain
+
+            a.Host = "webmail.taylorcorp.com";
+            a = AccountGateway.Update(a);
+
+            #endregion
+
+            Process.Start(AccountGateway.AccountSettingPath);
+
+            Authentication.AuthenticationManager.Refresh();
+
+            cookies = Authentication.AuthenticationManager.Current.CookieCache;
+
+            Console.WriteLine("Count:{0}", cookies.Count);
+
+            Assert.IsTrue(cookies.Count >= 2);
+        }
+
+        [TestMethod]
+        public void SingletonTest()
+        {
+            IList<Cookie> cookies1 = Authentication.AuthenticationManager.Current.CookieCache;
+            IList<Cookie>  cookies2 = Authentication.AuthenticationManager.Current.CookieCache;
+            Assert.AreEqual(cookies1,cookies2);
+            IList<Cookie> cookies3 = Authentication.AuthenticationManager.Current.CookieCache;
+            Assert.AreEqual(cookies2, cookies3);
+        }
+
     }
 }

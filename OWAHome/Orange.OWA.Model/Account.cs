@@ -16,8 +16,10 @@ namespace Orange.OWA.Model
             Password = password;
             Host = host;
             Email = email;
-            IsDefault = false;
+            IsDefault = isDefault;
         }
+
+        public Account(){}
 
         public string UserName { get; set; }
         public string Password { get; set; }
@@ -25,17 +27,5 @@ namespace Orange.OWA.Model
         public string Email { get; set; }
         public bool IsDefault { get; set; }
         public Guid Id { get; set; }
-    }
-
-    [XmlRoot]
-    public class AccountCollection
-    {
-        [XmlElement]
-        public Account[] Accounts { get; set; }
-
-        public AccountCollection()
-        {
-            Accounts=new Account[0];
-        }
     }
 }

@@ -10,46 +10,55 @@ using Orange.OWA.Model;
 
 namespace Orange.OWA.Gateway
 {
-    public static class AccountGateway
+    public class AccountGateway
     {
+        static AccountGateway()
+        {
+            if (!File.Exists(AccountSettingPath))
+            {
+                Init();
+            }
+        }
+        
         public static string AccountSettingPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Accounts.xml");
         
-        public static void Init()
+        private static void Init()
         {
-                AccountCollection accounts = new AccountCollection()
-                                                 {
-                                                     Accounts = new Account[]
-                                                                    {
-                                                                        new Account(Guid.NewGuid(), "corp\bkwang", "R8ll#qqO2",
-                                                                                    "webmail.taylorcorp.com",
-                                                                                    "bkwang@nltechdev.com",true),
-                                                                        new Account(Guid.NewGuid(),"corp\bkwang", "R8ll#qqO2",
-                                                                                    "lagecy.taylorcorp.com",
-                                                                                    "bkwang@nltechdev.com")
-                                                                    }
-                                                 };
+            //_host = "legacymail.taylorcorp.com";//"webmail.taylorcorp.com";
+            //_userName = "corp\\bkwang";
+            //_password = "R8ll#qqO2";
+            //_emailAddress = "bkwang@nltechdev.com";
+
+            IList<Account> accounts = new List<Account>()
+                {
+                    new Account(Guid.NewGuid(), "corp\\bkwang", "R8ll#qqO2",
+                                "webmail.taylorcorp.com",
+                                "bkwang@nltechdev.com", true),
+                    new Account(Guid.NewGuid(), "corp\\bkwang", "R8ll#qqO2",
+                                "legacymail.taylorcorp.com",
+                                "bkwang@nltechdev.com")
+                };
 
             Save(accounts);
-
         }
 
-        public static AccountCollection Read()
+        private static IList<Account> Read()
         {
-            XmlSerializer xml=new XmlSerializer(typeof(AccountCollection));
+            XmlSerializer xml = new XmlSerializer(typeof(List<Account>));
 
-            AccountCollection accounts;
-            
-            using (FileStream fs=new FileStream(AccountSettingPath,FileMode.Open))
+            IList<Account> accounts;
+
+            using (FileStream fs = new FileStream(AccountSettingPath, FileMode.Open))
             {
-                accounts = xml.Deserialize(fs) as AccountCollection;
+                accounts = xml.Deserialize(fs) as IList<Account>;
             }
 
-            return accounts??new AccountCollection();
+            return accounts ?? new List<Account>();
         }
 
-        public static void Save(AccountCollection input)
+        private static void Save(IList<Account> input)
         {
-            XmlSerializer xml = new XmlSerializer(typeof(AccountCollection));
+            XmlSerializer xml = new XmlSerializer(typeof(List<Account>));
             using (XmlWriter xwr = new XmlTextWriter(AccountSettingPath, Encoding.UTF8))
             {
                 xml.Serialize(xwr, input);
@@ -57,38 +66,90 @@ namespace Orange.OWA.Gateway
             }
         }
 
-        public static IAccount Add(string userName, string password, string host, string email)
-        {
-            AccountCollection accounts = Read();
 
-            IAccount account = new Account(Guid.NewGuid(), userName, password, host, email);
-            
-            accounts.Accounts = accounts.Accounts.Concat(new Account[] {account as Account}).ToArray();
+        public static IAccount Add(string userName, string password, string host, string email,bool isDefault=false)
+        {
+            IList<Account> accounts = Read();
+            if (isDefault)
+            {
+                foreach (Account a in accounts)
+                {
+                    a.IsDefault = false;
+                }
+            }
+            Guid id = Guid.NewGuid();
+            Account account = new Account(id, userName, password, host, email,isDefault);
+
+            accounts.Add(account);
 
             Save(accounts);
 
-            return account;
+            return Get(id);
         }
 
         public static IAccount Update(IAccount account)
         {
-            AccountCollection accounts = Read();
+            IList<Account> accounts = Read();
 
-            foreach (Account a in accounts.Accounts)
+            IAccount target = null;
+            IAccount orgDefault = null;
+
+            //Make sure default account is unique
+            foreach (Account a in accounts)
             {
-                if (a.Id == (account as Account).Id)
+                //remember original default account
+                if (a.IsDefault)
+                    orgDefault = a;
+                
+                //reset all account
+                if (account.IsDefault)
+                    a.IsDefault = false;
+
+                if (a.Id == account.Id)
                 {
-                    a.UserName = account.UserName;
-                    a.Password = account.Password;
-                    a.Host = account.Host;
-                    a.Email = account.Email;
-                    break;
+                    target = a;
                 }
+            }
+
+            if (target != null)
+            {
+                target.UserName = account.UserName;
+                target.Password = account.Password;
+                target.Host = account.Host;
+                target.Email = account.Email;
+                target.IsDefault = account.IsDefault;
+            }
+            else
+            {
+                //orgDefault is always existing.
+                //When no account to be updated, rollback default accout setting
+                if (orgDefault != null)
+                    orgDefault.IsDefault = true;
             }
 
             Save(accounts);
 
-            return account;
+            return Get(account.Id);
+        }
+
+        public static IList<IAccount> Update(IList<IAccount> accounts)
+        {
+            return accounts.Select(account => Update(account)).ToList();
+        }
+
+        public static IAccount GetDefault()
+        {
+            return Read().SingleOrDefault(a => a.IsDefault);
+        }
+
+        public static IList<IAccount> GetAll()
+        {
+            return Read().Cast<IAccount>().ToList();
+        }
+
+        public static IAccount Get(Guid id)
+        {
+            return Read().SingleOrDefault(a => a.Id == id);
         }
     }
 }

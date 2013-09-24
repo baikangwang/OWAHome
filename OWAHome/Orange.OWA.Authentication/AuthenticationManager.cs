@@ -1,64 +1,107 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Net;
+using System.Security;
+using System.Security.Authentication;
 using System.Text;
-using Orange.OWA.HttpWeb;
+using Orange.OWA.Core;
+using Orange.OWA.Gateway;
 using Orange.OWA.Interface;
 
 namespace Orange.OWA.Authentication
 {
-    public class AuthenticationManager
+    public class AuthenticationManager:IAuthenticationManager
     {
         private IList<Cookie> _cookieCache = null;
-        private static AuthenticationManager _mgr=new AuthenticationManager();
+        private readonly IAccount _currentAccount;
+        private static AuthenticationManager _mgr;//= new AuthenticationManager();
 
-        public IList<Cookie> CookieCache { get { return _cookieCache ?? (_cookieCache = Authenticate(_host, _userName, _password)); }
+        public IList<Cookie> CookieCache
+        {
+            get { return _cookieCache ?? (_cookieCache = Authenticate(_currentAccount)); }
         }
-        public static AuthenticationManager Current { get { return _mgr; } }
 
-        private string _host;
-        private string _userName;
-        private string _password;
-        private string _emailAddress;
+        public IAccount Account
+        {
+            get { return _currentAccount; }
+        }
 
-        private IAccount _currentAccount;
+        public static AuthenticationManager Current
+        {
+            get { return _mgr ?? (_mgr = new AuthenticationManager()); }
+        }
+
+        public static void Refresh()
+        {
+            _mgr = new AuthenticationManager();
+        }
 
         protected AuthenticationManager()
         {
+            Log.Debug("Authentication Manager initialized.");
             _cookieCache=new List<Cookie>();
-            _host = "legacymail.taylorcorp.com";//"webmail.taylorcorp.com";
-            _userName = "corp\\bkwang";
-            _password = "R8ll#qqO2";
-            _emailAddress = "bkwang@nltechdev.com";
-            
-            _cookieCache = Authenticate(_host, _userName, _password);
-        }
+            _currentAccount = AccountGateway.GetDefault();
+            if(_currentAccount==null)
+                throw new AuthenticationException("Message: No default account found in Account Setting.");
 
-        public string Host { get { return _host; } }
-        public string UserName { get { return _userName; } }
-        public string EmailAddress { get { return _emailAddress; } }
-
-        protected IList<Cookie> Authenticate(string host,string userName,string password)
-        {
-            string owaUrl = string.Format("https://{0}/exchweb/bin/auth/owaauth.dll", host);
-            string desUrl = string.Format("https://{0}/exchange",host);
-            string query = string.Format("destination={0}&flags=0&forcedownlevel=0&trusted=0&username={1}&password={2}&SubmitCreds=Log On;", desUrl, userName, password);
-            byte[] content = Encoding.UTF8.GetBytes(query);
-            
-            // Create the web OwaRequest:
-            OwaRequest owaRequest = OwaRequest.Post(owaUrl, content);
-
-            OwaResponse response = owaRequest.Send();
-
-            if (response.StatusCode != HttpStatusCode.OK)
+            try
             {
-                throw new Exception(string.Format("Message: Connection failed to url ({0}). Response status code: '{1}'.", desUrl, response.StatusCode));
+                _cookieCache = Authenticate(_currentAccount);
+            }
+            catch (AuthenticationException e)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Authentication Exception, are you using a valid login?");
+                sb.AppendLine("   Msg: " + e.Message);
+                sb.AppendLine("   Note: You must use a valid login / password for authentication.");
+                string message = sb.ToString();
+                Log.Error(message);
+                throw new AuthenticationException(message);
+            }
+            catch (SecurityException e)
+            {
+                StringBuilder sb=new StringBuilder();
+                sb.AppendLine("Security Exception");
+                sb.AppendLine("   Msg: " + e.Message);
+                sb.AppendLine("   Note: The application may not be trusted if run from a network share.");
+                string message = sb.ToString();
+                Log.Error(message);
+                throw new AuthenticationException(message);
+            }
+            catch (WebException e)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.AppendLine("Web Exception");
+                sb.AppendLine("   Status: " + e.Status);
+                sb.AppendLine("   Reponse: " + e.Response);
+                sb.AppendLine("   Msg: " + e.Message);
+                string message = sb.ToString();
+                Log.Error(message);
+                throw new AuthenticationException(message);
+            }
+            catch (Exception ex)
+            {
+                if (ex is AuthenticationException)
+                    throw;
+                
+                Log.ErrorFormat("Message: Authentication failed to email host ({0}). {1}", _currentAccount.Host,ex.Message);
+                throw new AuthenticationException(string.Format("Authentication failed to email host ({0})",
+                                                                _currentAccount.Host));
             }
 
-            response.Close();
-
-            return response.Cookies;
+            if (_cookieCache.Count < 2)
+            {
+                string message = "Login failed. Is the login / password correct?";
+                Log.Error(message);
+                throw new AuthenticationException(message);
+            }
         }
 
+        protected IList<Cookie> Authenticate(IAccount account)
+        {
+            IList<Cookie> cookies = AuthenticationGateway.Authenticate(account);
+
+            return cookies;
+        }
     }
 }

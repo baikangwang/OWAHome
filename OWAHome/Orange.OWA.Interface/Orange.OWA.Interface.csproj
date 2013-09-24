@@ -46,6 +46,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IAccount.cs" />
+    <Compile Include="IAuthenticationManager.cs" />
     <Compile Include="IEmail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

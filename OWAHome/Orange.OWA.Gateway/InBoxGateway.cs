@@ -5,7 +5,6 @@ using System.Text;
 using System.Linq;
 using System.Web;
 using System.Xml;
-using Orange.OWA.Authentication;
 using Orange.OWA.HttpWeb;
 using Orange.OWA.Interface;
 using Orange.OWA.Model.Email;
@@ -14,19 +13,15 @@ namespace Orange.OWA.Gateway
 {
     public class InBoxGateway
     {
-        public static string InBoxUrl
+        public static T GetEmailSimpleList<T>(IAuthenticationManager authMgr, int startIndex, int endIndex)
         {
-            get { return string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress); }
-        }
-
-        public static T GetEmailSimpleList<T>(int startIndex, int endIndex)
-        {
+            string url = GetInBoxUrl(authMgr.Account);//string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("<?xml version=\"1.0\"?>");
             sb.AppendLine("<searchrequest xmlns=\"DAV:\">");
             sb.AppendLine("	<sql>SELECT \"urn:schemas:mailheader:message-id\" as id, \"urn:schemas:httpmail:from\" as from, \"urn:schemas:httpmail:datereceived\" as datereceived, \"urn:schemas:httpmail:cc\" as cc, \"urn:schemas:mailheader:subject\" as subject, \"urn:schemas:httpmail:to\" as to, \"urn:schemas:httpmail:read\" as read, \"urn:schemas:httpmail:thread-topic\" as topic, \"urn:schemas:httpmail:submitted\" as submitted, \"urn:schemas:httpmail:priority\" as priority");
-            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", InBoxUrl));
+            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", url));
             sb.AppendLine("WHERE \"DAV:isfolder\" = false");
             sb.AppendLine("ORDER BY \"urn:schemas:httpmail:datereceived\" DESC");
             sb.AppendLine("	</sql>");
@@ -35,9 +30,8 @@ namespace Orange.OWA.Gateway
 
             byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
 
-            string url = InBoxUrl;//string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
 
-            OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
+            OwaRequest request = OwaRequest.Search(url, content, authMgr.CookieCache,
                                                    new Dictionary<string, string>() {{"depth", "1"}, {"Translate", "f"}});
             request.Accept = "*/*";
             request.ContentType = "text/xml";
@@ -67,8 +61,9 @@ namespace Orange.OWA.Gateway
             return result == null ? default(T) : (T) Convert.ChangeType(result, t);
         }
 
-        public static string GetEmailFullList(int startIndex, int endIndex)
+        public static string GetEmailFullList(IAuthenticationManager authMgr, int startIndex, int endIndex)
         {
+            string url = GetInBoxUrl(authMgr.Account);//string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
             StringBuilder sb = new StringBuilder();
 
             sb.AppendLine("<?xml version=\"1.0\"?>");
@@ -84,9 +79,8 @@ namespace Orange.OWA.Gateway
 
             byte[] content = Encoding.UTF8.GetBytes(sb.ToString());
 
-            string url = InBoxUrl;//string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
 
-            OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
+            OwaRequest request = OwaRequest.Search(url, content, authMgr.CookieCache,
                                                    new Dictionary<string, string>() { { "depth", "1" }, { "Translate", "f" } });
             request.Accept = "*/*";
             request.ContentType = "text/xml";
@@ -157,16 +151,16 @@ namespace Orange.OWA.Gateway
             return emails;
         }
 
-        public static T GetEmail<T>(string id)
+        public static T GetEmail<T>(IAuthenticationManager authMgr, string id)
         {
             StringBuilder sb = new StringBuilder();
 
-            //string inBoxUrl = string.Format("https://{0}/exchange/{1}/InBox/", AuthenticationManager.Current.Host, AuthenticationManager.Current.EmailAddress);
+            string url = GetInBoxUrl(authMgr.Account);//string.Format("https://{0}/exchange/{1}/InBox/",AuthenticationManager.Current.Host,AuthenticationManager.Current.EmailAddress);
             
             sb.AppendLine("<?xml version=\"1.0\"?>");
             sb.AppendLine("<searchrequest xmlns=\"DAV:\">");
             sb.AppendLine("	<sql>SELECT \"urn:schemas:mailheader:message-id\" as id, \"urn:schemas:httpmail:from\" as from, \"urn:schemas:httpmail:datereceived\" as datereceived, \"urn:schemas:httpmail:cc\" as cc, \"urn:schemas:mailheader:subject\" as subject, \"urn:schemas:httpmail:to\" as to,\"urn:schemas:httpmail:htmldescription\" as htmldescription,\"urn:schemas:httpmail:textdescription\" as textdescription, \"urn:schemas:httpmail:hasattachment\" as hasattachment,\"urn:schemas:httpmail:read\" as read, \"urn:schemas:httpmail:thread-topic\" as topic, \"urn:schemas:httpmail:submitted\" as submitted, \"urn:schemas:httpmail:priority\" as priority");
-            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", InBoxUrl));
+            sb.AppendLine(string.Format("FROM Scope('SHALLOW TRAVERSAL OF \"{0}\"')", url));
             sb.AppendLine("WHERE \"urn:schemas:mailheader:message-id\" = '" + System.Security.SecurityElement.Escape(id) + "' AND \"DAV:isfolder\" = false");
             sb.AppendLine("	</sql>");
             sb.AppendLine("</searchrequest>");
@@ -175,9 +169,7 @@ namespace Orange.OWA.Gateway
 
             byte[] content = Encoding.UTF8.GetBytes(query);
 
-            string url = InBoxUrl;
-
-            OwaRequest request = OwaRequest.Search(url, content, AuthenticationManager.Current.CookieCache,
+            OwaRequest request = OwaRequest.Search(url, content, authMgr.CookieCache,
                                                    new Dictionary<string, string>() { { "depth", "1" }, { "Translate", "f" } });
             request.Accept = "*/*";
             request.ContentType = "text/xml";
@@ -211,6 +203,11 @@ namespace Orange.OWA.Gateway
         public static string Serialize(IEmail email)
         {
             return string.Empty;
+        }
+
+        private static string GetInBoxUrl(IAccount account)
+        {
+            return string.Format("https://{0}/exchange/{1}/InBox/", account.Host, account.Email);
         }
     }
 }

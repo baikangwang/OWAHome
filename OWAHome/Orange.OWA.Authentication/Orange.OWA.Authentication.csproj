@@ -38,20 +38,19 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthenticationManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Orange.OWA.HttpWeb\Orange.OWA.HttpWeb.csproj">
-      <Project>{ff08220c-be1b-4188-b44d-418f71daae74}</Project>
-      <Name>Orange.OWA.HttpWeb</Name>
+    <ProjectReference Include="..\Orange.OWA.Core\Orange.OWA.Core.csproj">
+      <Project>{01a72968-4e5a-4320-8986-d3186e0608cf}</Project>
+      <Name>Orange.OWA.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Orange.OWA.Gateway\Orange.OWA.Gateway.csproj">
+      <Project>{3a702eff-8bde-4679-80c0-59a0e0c81601}</Project>
+      <Name>Orange.OWA.Gateway</Name>
     </ProjectReference>
     <ProjectReference Include="..\Orange.OWA.Interface\Orange.OWA.Interface.csproj">
       <Project>{c6c97a9e-b5db-4360-9119-c0464c0e8a95}</Project>

@@ -4,14 +4,13 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{3A702EFF-8BDE-4679-80C0-59A0E0C81601}</ProjectGuid>
+    <ProjectGuid>{01A72968-4E5A-4320-8986-D3186E0608CF}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Orange.OWA.Gateway</RootNamespace>
-    <AssemblyName>Orange.OWA.Gateway</AssemblyName>
+    <RootNamespace>Orange.OWA.Core</RootNamespace>
+    <AssemblyName>Orange.OWA.Core</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
     <SccProjectName>SAK</SccProjectName>
     <SccLocalPath>SAK</SccLocalPath>
     <SccAuxPath>SAK</SccAuxPath>
@@ -25,7 +24,6 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,33 +34,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="log4net">
+      <HintPath>..\thirdparty\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AccountGateway.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="AuthenticationGateway.cs" />
-    <Compile Include="Ext\XmlDocumentExt.cs" />
-    <Compile Include="InBoxGateway.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Orange.OWA.HttpWeb\Orange.OWA.HttpWeb.csproj">
-      <Project>{ff08220c-be1b-4188-b44d-418f71daae74}</Project>
-      <Name>Orange.OWA.HttpWeb</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orange.OWA.Interface\Orange.OWA.Interface.csproj">
-      <Project>{c6c97a9e-b5db-4360-9119-c0464c0e8a95}</Project>
-      <Name>Orange.OWA.Interface</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Orange.OWA.Model\Orange.OWA.Model.csproj">
-      <Project>{bb7da58b-71b4-479d-bbc1-7791af4fddd7}</Project>
-      <Name>Orange.OWA.Model</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

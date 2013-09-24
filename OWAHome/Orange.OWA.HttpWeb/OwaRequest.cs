@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Security;
+using Orange.OWA.Core;
 
 namespace Orange.OWA.HttpWeb
 {
@@ -78,11 +80,25 @@ namespace Orange.OWA.HttpWeb
             HttpWebResponse response;
             try
             {
-                response = (HttpWebResponse)_request.GetResponse();
+                response = (HttpWebResponse) _request.GetResponse();
+            }
+            catch (WebException)
+            {
+                throw;
+            }
+            catch (SecurityException)
+            {
+                throw;
             }
             catch (Exception ex)
             {
-                throw new Exception(string.Format("Message: request failed to url ({0}). {1}", _request.RequestUri, ex.Message));
+                Log.ErrorFormat("Message: request failed to url ({0}). {1}", _request.RequestUri,ex.Message);
+                throw;
+            }
+
+            if (response.StatusCode != HttpStatusCode.OK)
+            {
+                throw new Exception(string.Format("Message: Connection failed to url ({0}). Response status code: '{1}'.", _request.RequestUri, response.StatusCode));
             }
 
             OwaResponse owaOwaResponse=new OwaResponse(response);
